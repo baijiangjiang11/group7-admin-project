@@ -110,13 +110,13 @@ export const asyncRoutes = [
       },
       {
         path: 'details',
-        hidden:true,
+        hidden: true,
         component: () => import('@/pages/customer/Details'),
         name: 'details',
         meta: { title: '顾客详情', icon: 'tab' }
       }
     ]
-  } ,
+  },
   {
     path: '/category',
     component: Layout,
@@ -129,13 +129,13 @@ export const asyncRoutes = [
       },
       {
         path: 'details',
-        hidden:true,
+        hidden: true,
         component: () => import('@/pages/category/Details'),
         name: 'details',
         meta: { title: '栏目详情', icon: 'tab' }
       }
     ]
-  } ,
+  },
   {
     path: '/product',
     component: Layout,
@@ -148,32 +148,32 @@ export const asyncRoutes = [
       },
       {
         path: 'details',
-        hidden:true,
+        hidden: true,
         component: () => import('@/pages/product/Details'),
         name: 'details',
         meta: { title: '产品详情', icon: 'tab' }
       }
     ]
-  } ,
+  },
   {
     path: '/waiter',
     component: Layout,
     children: [
       {
-        path: 'list',
+        path: 'waiter',
         component: () => import('@/pages/waiter/Waiter'),
         name: 'waiter',
         meta: { title: '员工管理', icon: 'waiter' }
       },
       {
         path: 'details',
-        hidden:true,
-        component: () => import('@/pages/product/Details'),
+        hidden: true,
+        component: () => import('@/pages/waiter/Details'),
         name: 'details',
         meta: { title: '员工详情', icon: 'tab' }
       }
     ]
-  } ,
+  },
   {
     path: '/order',
     component: Layout,
@@ -186,17 +186,17 @@ export const asyncRoutes = [
       },
       {
         path: 'details',
-        hidden:true,
+        hidden: true,
         component: () => import('@/pages/order/Details'),
         name: 'details',
         meta: { title: '订单详情', icon: 'tab' }
       }
     ]
-  } ,
+  },
   {
     path: '/check',
     component: Layout,
-    meta:{title:"审核管理", icon: 'tab' },
+    meta: { title: '审核管理', icon: 'tab' },
     children: [
       {
         path: 'waiter',
@@ -211,7 +211,7 @@ export const asyncRoutes = [
         meta: { title: '提现审核', icon: 'tab' }
       }
     ]
-  } ,
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
