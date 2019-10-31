@@ -205,6 +205,13 @@ export const asyncRoutes = [
         meta: { title: '栏目管理', icon: 'category' }
       },
       {
+        path: 'category_details',
+        hidden: true,
+        component: () => import('@/pages/sys/CategoryDetails'),
+        name: 'category',
+        meta: { title: '栏目详情' }
+      }
+      {
         path: 'product',
         component: () => import('@/pages/sys/Product'),
         name: 'product',
