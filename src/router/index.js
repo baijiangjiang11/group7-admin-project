@@ -180,7 +180,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'list',
-        component: () => import('@/pages/order/Order'),
+        component: () => import('@/pages/order/order'),
         name: 'order',
         meta: { title: '订单管理', icon: 'order' }
       },
