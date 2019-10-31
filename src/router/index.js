@@ -117,44 +117,44 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/category',
-    component: Layout,
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/pages/category/category'),
-        name: 'category',
-        meta: { title: '栏目管理', icon: 'category' }
-      },
-      {
-        path: 'details',
-        hidden: true,
-        component: () => import('@/pages/category/Details'),
-        name: 'details',
-        meta: { title: '栏目详情', icon: 'tab' }
-      }
-    ]
-  },
-  {
-    path: '/product',
-    component: Layout,
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/pages/product/product'),
-        name: 'product',
-        meta: { title: '产品管理', icon: 'product' }
-      },
-      {
-        path: 'details',
-        hidden: true,
-        component: () => import('@/pages/product/Details'),
-        name: 'details',
-        meta: { title: '产品详情', icon: 'tab' }
-      }
-    ]
-  },
+  // {
+  //   path: '/category',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       component: () => import('@/pages/category/category'),
+  //       name: 'category',
+  //       meta: { title: '栏目管理', icon: 'category' }
+  //     },
+  //     {
+  //       path: 'details',
+  //       hidden: true,
+  //       component: () => import('@/pages/category/Details'),
+  //       name: 'details',
+  //       meta: { title: '栏目详情', icon: 'tab' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/product',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       component: () => import('@/pages/product/product'),
+  //       name: 'product',
+  //       meta: { title: '产品管理', icon: 'product' }
+  //     },
+  //     {
+  //       path: 'details',
+  //       hidden: true,
+  //       component: () => import('@/pages/product/Details'),
+  //       name: 'details',
+  //       meta: { title: '产品详情', icon: 'tab' }
+  //     }
+  //   ]
+  // },
   {
     path: '/waiter',
     component: Layout,
@@ -190,6 +190,32 @@ export const asyncRoutes = [
         component: () => import('@/pages/order/Details'),
         name: 'details',
         meta: { title: '订单详情', icon: 'tab' }
+      }
+    ]
+  },
+  {
+    path: '/sys',
+    component: Layout,
+    meta: { title: '系统配置', icon: 'tab' },
+    children: [
+      {
+        path: 'catgory',
+        component: () => import('@/pages/sys/Category'),
+        name: 'catgory',
+        meta: { title: '栏目管理', icon: 'category' }
+      },
+      {
+        path: 'product',
+        component: () => import('@/pages/sys/Product'),
+        name: 'product',
+        meta: { title: '产品管理', icon: 'product' }
+      },
+      {
+        path: 'product_details',
+        hidden: true,
+        component: () => import('@/pages/sys/ProductDetails'),
+        name: 'product',
+        meta: { title: '产品详情' }
       }
     ]
   },

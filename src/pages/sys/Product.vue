@@ -3,13 +3,13 @@
     <!-- 按钮 -->
 
     <el-row>
-      <el-col :span="13">
+      <el-col :span="15">
         <el-button type="primary" size="small" @click="toAddHandler">添加</el-button>
         <el-button type="danger" size="small" @click="batchDeleteHandler">批量删除</el-button>
       </el-col>
-      <el-col :span="11">
+      <el-col :span="9">
         <el-form :inline="true">
-          <el-form-item label="产品id">
+          <el-form-item>
             <el-select v-model="product.id" placeholder="请选择产品id">
               <el-option v-for="c in products" :label="c.id" :value="c.id" />
             </el-select>
@@ -32,7 +32,7 @@
           <template #default="record">
             <i class="el-icon-delete" href="" @click.prevent="deleteHandler(record.row.id)" /> &nbsp;
             <i class="el-icon-edit-outline" href="" @click.prevent="editHandler(record.row)" /> &nbsp;
-            <a href="#" @click.prevent="toDetailsHandler()">详情</a>
+            <a href="" @click.prevent="toDetailsHandler(record.row.id)">详情</a>
           </template>
         </el-table-column>
       </el-table>
@@ -54,6 +54,20 @@
             <el-option v-for="c in categories" :label="c.id" :value="c.id" />
           </el-select>
         </el-form-item>
+        <el-form-item label="介绍" label-width="100px" prop="description">
+          <el-input v-model="product.description"type="textarea":rows="2"placeholder="请输入内容" auto-complete="off" />
+        </el-form-item>
+        <el-form-item label="产品主图" label-width="100px">
+          <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :file-list="fileList"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeModal">取 消</el-button>
@@ -69,7 +83,9 @@ export default {
   data() {
     return {
       product: {},
-      ids: []
+      ids: [],
+      fileList: []
+
     }
   },
   computed: {
@@ -82,10 +98,15 @@ export default {
   },
   methods: {
     ...mapMutations('product', ['showModal', 'closeModal', 'setTitle']),
-    ...mapActions('product', ['findAllProducts', 'findAllCategories', 'saveOrUpdateProduct', 'deleteProductById', 'batchDeleteProduct']),
+    ...mapActions('product', ['findAllProducts', 'searchProductById', 'findAllCategories', 'saveOrUpdateProduct', 'deleteProductById', 'batchDeleteProduct']),
     // 普通方法
-    toDetailsHandler() {
-      alert(1)
+    toDetailsHandler(id) {
+      this.$router.push({
+        path: '/sys/product_details',
+        query: {
+          id
+        }
+      })
     },
     handleSelectionChange(val) {
       this.ids = val.map(item => item.id)
@@ -112,9 +133,8 @@ export default {
         }
       })
     },
-    dialogCloseHandler() {
-      this.$refs.productForm.resetFields()
-      this.closeModal()
+    dialogCloseHandler(id) {
+      alert(id)
     },
     editHandler(row) {
       this.product = row
@@ -134,7 +154,7 @@ export default {
         })
     },
     searchHandler() {
-      this.findAllCategories()
+      this.findAllProducts(this.id)
     }
 
   }
