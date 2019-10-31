@@ -64,19 +64,19 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/dashboard',
+  //   children: [
+  //     {
+  //       path: 'dashboard',
+  //       component: () => import('@/views/dashboard/index'),
+  //       name: 'Dashboard',
+  //       meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/profile',
     component: Layout,
@@ -98,6 +98,17 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/',
+    children: [{
+      path: 'zhuye',
+      name: 'zhuye',
+      component: () => import('@/pages/zhuye/zhuye'),
+      meta: { title: '主页', icon: 'address' }
+    }]
+  },
   {
     path: '/customer',
     component: Layout,
