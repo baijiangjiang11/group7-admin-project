@@ -1,53 +1,97 @@
-<template>
-  <div class="productDetails">
-    <h2>产品详情</h2>
-    <el-button size="small" type="text" @click="backHandler">返回</el-button>
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="基本信息" name="info">
-        基本信息...
-      </el-tab-pane>
-      <el-tab-pane label="订单信息" name="orders">
-        订单信息...
-      </el-tab-pane>
-      <el-tab-pane label="服务地址" name="address">
-        <el-table :data="address">
-          <el-table-column label="省" prop="province" />
-          <el-table-column label="市" prop="city" />
-          <el-table-column label="区" prop="area" />
-          <el-table-column label="街道" prop="address" />
-          <el-table-column label="手机号" prop="telephone" />
-        </el-table>
-      </el-tab-pane>
-    </el-tabs>
-  </div>
-</template>
-<script>
-import { mapState, mapActions } from 'vuex'
+import request from '@/utils/request'
+import {post,post_array} from '@/utils/request'
 export default {
-  data() {
-    return {
-      activeName: 'info'
-    }
-  },
-  created() {
-    console.log(this.$route)
-    const id = this.$route.query.id
-    // 通过id查询顾客，订单，地址
-    this.findAddressByProductId(id)
-  },
-  computed: {
-    ...mapState('address', ['address'])
-  },
-  methods: {
-    ...mapActions('address', ['findAddressByProductId']),
-    backHandler() {
-      // this.$router.push("/product")
-      this.$router.go(-1)
-    }
-  }
+    namespaced:true,
+        state:{
+            addresses:{
+                list:[]
+            },
+            customers:[],
+            visible:false,
+            title:"添加顾客信息"
+        },
+        getters:{
+          addressSize(state){
+            return state.addresses.length;
+          },
+          orderAddress:(state)=>{
+            return function(flag){
+              state.addresses.sort((a,b)=>{
+                if(a[flag] > b[flag]){
+                  return -1;
+                } else {
+                  return 1;
+                }
+              })
+              return state.addresses;
+            }
+          }
+        },
+        mutations:{
+            refreshAddress(state,addresses){
+                state.addresses = addresses;
+            },
+            showModal(state){
+                state.visible = true;
+            },
+            closeModal(state){
+                state.visible = false;
+            },
+            refreshCustomers(state,customers){
+              state.customers = customers;
+            },
+            setTitle(state,title){
+                state.title = title;
+            },
+            pageChangeHandler(state,params,currentPage){
+              console.log(params.page);
 
+            }
+
+        },
+        actions:{
+          async findAllCustomers({dispatch,commit}){
+            // 1. ajax查询
+            let response = await request.get("/customer/findAll");
+            // 2. 将查询结果更新到state中
+            commit("refreshCustomers",response.data);
+          },
+            //分页查询数据
+            async findqueryAddress(context,param){
+                if(!param){
+                  param = {
+                    page:0,
+                    pageSize:5
+                  }
+                }
+                //1.ajax查询
+                let response = await post("/address/query",param);
+                //2.将查询结果更新到state中
+                context.commit("refreshAddress",response.data);
+            },
+            //删除
+            async  deleteAddressHandler(context,id){
+                let response = await request.get("/address/deleteById?id="+id);
+                context.dispatch("findqueryAddress");
+                return response;
+            },
+            //保存或更新
+            async saveOrUpdateAddress({commit,dispatch},playload){
+                let response = await post("/address/saveOrUpdate",playload)
+                //刷新页面
+                dispatch("findqueryAddress");
+                //关闭模态框
+                commit("closeModal");
+                //提示
+                return response;
+            },
+            //批量删除
+            async batchDeleteAddress(context,ids){
+                let response = await post_array("/address/batchDelete",{ids});
+                //分发
+                context.dispatch("findqueryAddress");
+                //返回结果
+                return response;
+            }
+        }
 }
-</script>
-<style scoped>
-
-</style>
