@@ -210,7 +210,7 @@ export const asyncRoutes = [
         component: () => import('@/pages/sys/CategoryDetails'),
         name: 'category',
         meta: { title: '栏目详情' }
-      }
+      },
       {
         path: 'product',
         component: () => import('@/pages/sys/Product'),

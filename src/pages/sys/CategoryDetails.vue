@@ -1,1 +1,5 @@
-栏目详情
+<template>
+  <div>
+    栏目详情
+  </div>
+</template>
