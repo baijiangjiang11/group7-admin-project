@@ -5,16 +5,17 @@
         <el-col :span="14">
           <!-- 按钮 -->
           <el-button type="primary" size="small" @click="toAddHandler">添加</el-button>
-          <el-button type="success" size="small">批量删除</el-button>
+          <el-button type="success" size="small" @click="batchDeleteHandler">批量删除</el-button>
         </el-col>
-        <el-col :span="10">
-          <el-form-item>
-            <el-select v-modal="categoryId" placeholder="请选择栏目id">
-              <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-          </el-form-item>
-
-        </el-col>
+        <!-- <el-col :span="10">
+          <el-form :inline="true">
+              <el-form-item>
+                <el-select v-modal="categoryId" placeholder="请选择栏目id">
+                <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
+                </el-select>
+              </el-form-item>
+          </el-form>
+        </el-col>    -->
       </el-row>
       <!-- <el-button type="primary" size="small" @click="toAddHandler">添加</el-button>
       <el-select size="small" /> -->
@@ -44,18 +45,15 @@
     <!-- 模态框 -->
     <el-dialog :title="title" :visible.sync="visible" @close="dialogCloseHandler">
       <el-form ref="categoryForm" :model="category">
-        {{ category }}
         <el-form-item label="栏目名称" label-width="100px" prop="name">
-          <el-input v-model="category.name" auto-complete="off" />
+          <el-select v-model="category.name" placeholder="请输入所属栏目区域">
+            <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
         </el-form-item>
         <el-form-item label="数量" label-width="100px" prop="num">
           <el-input v-model="category.num" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="所属栏目" label-width="100px" prop="parentId">
-          <el-select v-model="category.parentId" placeholder="请输入所属栏目区域">
-            <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-form-item>
+
         <el-form-item label="栏目图标" label-width="100px">
           <el-upload
             class="upload-demo"
@@ -98,7 +96,7 @@ export default {
 
     // 映射
     ...mapMutations('category', ['closeModal', 'showModal', 'setTitle']),
-    ...mapActions('category', ['findAllCategories', 'deleteCategoryById', 'saveOrUpdateCategory']),
+    ...mapActions('category', ['findAllCategories', 'deleteCategoryById', 'saveOrUpdateCategory', 'batchDeleteCategory']),
     // 普通方法
 
     // 上传照片
@@ -170,6 +168,12 @@ export default {
       this.fileList.push({ name: 'old', url: 'row.icon' })
       this.setTitle('修改栏目信息')
       this.showModal()
+    },
+    batchDeleteHandler() {
+      this.batchDeleteCategory(this.ids)
+        .then((response) => {
+          this.$message({ type: 'success', message: response.statusText })
+        })
     }
   }
 }
