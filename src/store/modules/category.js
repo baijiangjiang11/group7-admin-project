@@ -38,6 +38,13 @@ export default {
 
   },
   actions: {
+    // 批量删除
+    async batchDeleteCategory(context, ids) {
+      const response = await post_array('/category/batchDelete', { ids })
+      // 分发
+      context.dispatch('findAllCategories')
+      return response
+    },
     // 渲染栏目信息
     async findAllCategories({ dispatch, commit }) {
       commit('beginLoading')
@@ -45,7 +52,7 @@ export default {
       commit('refreshCategories', response.data)
       setTimeout(() => {
         commit('endLoading')
-      }, 3000)
+      }, 1000)
     },
     // 根据id删除栏目信息
     async deleteCategoryById(context, id) {
