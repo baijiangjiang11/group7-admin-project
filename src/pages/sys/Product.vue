@@ -51,11 +51,11 @@
         </el-form-item>
         <el-form-item label="产品id" label-width="100px">
           <el-select v-model="product.categoryId" placeholder="请选择栏目id">
-            <el-option v-for="c in categories" :label="c.id" :value="c.id" />
+            <el-option v-for="c in categories" :key="c.id" :label="c.id" :value="c.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="介绍" label-width="100px" prop="description">
-          <el-input v-model="product.description"type="textarea":rows="2"placeholder="请输入内容" auto-complete="off" />
+          <el-input v-model="product.description" type="textarea" :rows="2" placeholder="请输入内容" auto-complete="off" />
         </el-form-item>
         <el-form-item label="产品主图" label-width="100px">
           <el-upload
