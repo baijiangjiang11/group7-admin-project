@@ -67,13 +67,13 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/zhuye',
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        path: 'zhuye',
+        component: () => import('@/pages/zhuye/zhuye'),
+        name: 'zhuye',
+        meta: { title: '主页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -98,19 +98,19 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/zhuye',
-    children: [
-      {
-        path: 'zhuye',
-        component: () => import('@/pages/zhuye/zhuye'),
-        name: 'zhuye',
-        meta: { title: '主页', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/zhuye',
+  //   children: [
+  //     {
+  //       path: 'zhuye',
+  //       component: () => import('@/pages/zhuye/zhuye'),
+  //       name: 'zhuye',
+  //       meta: { title: '主页', icon: 'dashboard', affix: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/customer',
     component: Layout,
@@ -119,7 +119,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/pages/customer/List'),
         name: 'customer',
-        meta: { title: '顾客管理', icon: 'tab' }
+        meta: { title: '顾客管理', icon: 'customer' }
       },
       {
         path: 'details',
