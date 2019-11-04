@@ -1,10 +1,23 @@
 <template>
   <div class="category">
     <div>
-      <!-- 按钮 -->
-      <el-button type="primary" size="small" @click="toAddHandler">添加</el-button>
-      <!-- 查询 -->
-      <el-select size="small" />
+      <el-row>
+        <el-col :span="14">
+          <!-- 按钮 -->
+          <el-button type="primary" size="small" @click="toAddHandler">添加</el-button>
+          <el-button type="success" size="small">批量删除</el-button>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item>
+            <el-select v-modal="categoryId" placeholder="请选择栏目id">
+              <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+
+        </el-col>
+      </el-row>
+      <!-- <el-button type="primary" size="small" @click="toAddHandler">添加</el-button>
+      <el-select size="small" /> -->
     </div>
     <!-- 表格 -->
     <div v-loading="loading">
@@ -13,8 +26,12 @@
         <el-table-column prop="id" label="编号" align="center" />
         <el-table-column prop="name" label="栏目名称" align="center" />
         <el-table-column prop="num" label="数量" align="center" />
-        <el-table-column prop="parentId" label="父ID" align="center" />
-        <el-table-column label="操作">
+        <el-table-column label="栏目图标" align="center">
+          <template v-slot:default="record">
+            <img :src="record.row.icon" alt="">
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
           <template #default="record">
             <i class="el-icon-delete" href="" @click.prevent="deleteHandler(record.row.id)" /> &nbsp;
             <i class="el-icon-edit-outline" href="" @click.prevent="editHandler(record.row)" /> &nbsp;
@@ -27,16 +44,35 @@
     <!-- 模态框 -->
     <el-dialog :title="title" :visible.sync="visible" @close="dialogCloseHandler">
       <el-form ref="categoryForm" :model="category">
+        {{ category }}
         <el-form-item label="栏目名称" label-width="100px" prop="name">
           <el-input v-model="category.name" auto-complete="off" />
         </el-form-item>
         <el-form-item label="数量" label-width="100px" prop="num">
           <el-input v-model="category.num" auto-complete="off" />
         </el-form-item>
+        <el-form-item label="所属栏目" label-width="100px" prop="parentId">
+          <el-select v-model="category.parentId" placeholder="请输入所属栏目区域">
+            <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="栏目图标" label-width="100px">
+          <el-upload
+            class="upload-demo"
+            action="http://134.175.154.93:6677/file/upload"
+            :file-list="fileList"
+            :on-success="uploadSuccessHandler"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeModal">取 消</el-button>
         <el-button size="small" type="primary" @click="submitHandler">确 定</el-button>
+
       </div>
     </el-dialog>
     <!-- /模态框 -->
@@ -47,6 +83,7 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   data() {
     return {
+      fileList: [],
       category: {},
       ids: []
     }
@@ -63,11 +100,25 @@ export default {
     ...mapMutations('category', ['closeModal', 'showModal', 'setTitle']),
     ...mapActions('category', ['findAllCategories', 'deleteCategoryById', 'saveOrUpdateCategory']),
     // 普通方法
+
+    // 上传照片
+    uploadSuccessHandler(response) {
+      // 获取返回值中的id，然后将id设置到列表中
+      alert(response.atatus)
+      if (response.status === 200) {
+        const id = response.data.id
+        const icon = 'http://134.175.154.93:8888/group1/' + id
+        this.category.icon = icon
+        this.category = Object.assign({}, this.category)
+      } else {
+        this.$message.error('上传异常')
+      }
+    },
     // 跳转到详情页面
     toDetailsHandler(category) {
       this.$router.push({
-        path: './Details',
-        query: { id: category.id }
+        path: '/sys/category_details',
+        query: { category }
 
       })
     },
@@ -77,7 +128,7 @@ export default {
     // 添加按钮
     toAddHandler() {
       // 1.重置表单
-      this.customer = {}
+      this.category = {}
       // 2.修改title
       this.setTitle('添加顾客信息')
       // 3.显示模态框
@@ -87,6 +138,7 @@ export default {
     dialogCloseHandler() {
       this.$refs.categoryForm.resetFields()
       this.closeModal()
+      this.fileList = []
     },
     submitHandler() {
       // 校验
@@ -113,7 +165,9 @@ export default {
     },
     // 为修改按钮绑定事件
     editHandler(row) {
+      // 将当前行的信息绑定category
       this.category = row
+      this.fileList.push({ name: 'old', url: 'row.icon' })
       this.setTitle('修改栏目信息')
       this.showModal()
     }
