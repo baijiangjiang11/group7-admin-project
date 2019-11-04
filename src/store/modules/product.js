@@ -66,9 +66,8 @@ export default {
       context.commit('refreshProduct', response.data)
     },
     async searchProductById(context, id) {
-      const response = await request.get('/product/findById', { id })
-      context.dispatch('findAllProducts')
-      return response
+      const response = await request.get('/product/findById?id=' + id)
+      context.commit('refreshProducts', [response.data])
     },
     async findAllProducts(context) {
       // 1. ajax查询

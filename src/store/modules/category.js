@@ -27,9 +27,11 @@ export default {
     refreshCategories(state, categories) {
       state.categories = categories
     },
+    // 开始加载
     beginLoading(state) {
       state.loading = true
     },
+    // 结束加载
     endLoading(state) {
       state.loading = false
     }
@@ -43,7 +45,7 @@ export default {
       commit('refreshCategories', response.data)
       setTimeout(() => {
         commit('endLoading')
-      }, 1000)
+      }, 3000)
     },
     // 根据id删除栏目信息
     async deleteCategoryById(context, id) {

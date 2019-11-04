@@ -10,11 +10,11 @@
       <el-col :span="9">
         <el-form :inline="true">
           <el-form-item>
-            <el-select v-model="product.id" placeholder="请选择产品id">
-              <el-option v-for="c in products" :label="c.id" :value="c.id" />
+            <el-select v-model="productId" placeholder="请选择产品id">
+              <el-option v-for="p in products" :label="p.id" :value="p.id" />
             </el-select>
           </el-form-item>
-          <el-button type="primary" @click="searchHandler">查询</el-button>
+          <el-button type="primary" @click="searchHandler()">查询</el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -39,19 +39,21 @@
     </div>
     <!-- 模态框 -->
     <el-dialog :title="title" :visible.sync="visible" @close="dialogCloseHandler">
-      <el-form ref="productForm" :model="product" :rules="rules">
+      <el-form ref="productForm" :model="product">
         <el-form-item label="产品名称" label-width="100px" prop="name">
           <el-input v-model="product.name" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="描述" label-width="100px" prop="description">
-          <el-input v-model="product.description" auto-complete="off" />
-        </el-form-item>
+
         <el-form-item label="价格" label-width="100px" prop="price">
           <el-input v-model="product.price" auto-complete="off" />
         </el-form-item>
         <el-form-item label="产品id" label-width="100px">
           <el-select v-model="product.categoryId" placeholder="请选择栏目id">
+<<<<<<< HEAD
             <el-option v-for="c in categories" :key="c.id" :label="c.id" :value="c.id" />
+=======
+            <el-option v-for="c in categories" :label="c.name" :value="c.id" />
+>>>>>>> 81ffe523124ff9a6e6a86acd75a96f4abd2afc10
           </el-select>
         </el-form-item>
         <el-form-item label="介绍" label-width="100px" prop="description">
@@ -60,8 +62,9 @@
         <el-form-item label="产品主图" label-width="100px">
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://134.175.154.93:6677/file/upload"
             :file-list="fileList"
+            :on-success="uploadSuccessHandler"
             list-type="picture"
           >
             <el-button size="small" type="primary">点击上传</el-button>
@@ -84,7 +87,8 @@ export default {
     return {
       product: {},
       ids: [],
-      fileList: []
+      fileList: [],
+      productId: '请选择'
 
     }
   },
@@ -110,6 +114,19 @@ export default {
     },
     handleSelectionChange(val) {
       this.ids = val.map(item => item.id)
+    },
+    uploadSuccessHandler(response) {
+      // 获取返回值中的id，然后将id设置到表单product
+      alert(response.status)
+      if (response.status === 200) {
+        const id = response.data.id
+        const photo = 'http://134.175.154.93:8888/group1/' + id
+        alert(photo)
+        this.product.photo = photo
+        console.log(photo)
+      } else {
+        this.$message.error('上传异常！')
+      }
     },
     toAddHandler() {
       // 1. 重置表单
@@ -154,7 +171,7 @@ export default {
         })
     },
     searchHandler() {
-      this.findAllProducts(this.id)
+      this.searchProductById(this.productId)
     }
 
   }
